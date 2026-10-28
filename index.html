@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Mundiales y Eurocopas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+  /* Layout: cabecera corta y dos paneles grandes lado a lado (uno por competición); en móvil se apilan. */
+  :root {
+    --bg: #eef1ee;
+    --fg: #13211b;
+    --muted: #55645c;
+    --line: #cdd6cf;
+    --wc-bg: #0e3b2c;
+    --wc-fg: #f3f1e4;
+    --wc-accent: #e7c04a;
+    --eu-bg: #14306a;
+    --eu-fg: #eef3fb;
+    --eu-accent: #8fc3ff;
+    --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c1511;
+      --fg: #e8eee9;
+      --muted: #93a39a;
+      --line: #25342c;
+      --wc-bg: #12503b;
+      --eu-bg: #1b3f8a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1511;
+    --fg: #e8eee9;
+    --muted: #93a39a;
+    --line: #25342c;
+    --wc-bg: #12503b;
+    --eu-bg: #1b3f8a;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    padding-block: 40px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+
+  header { display: flex; flex-direction: column; gap: 8px; }
+  .kicker {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 9vw, 84px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .lead { margin: 0; color: var(--muted); max-width: 52ch; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+  .panel {
+    --p-bg: var(--wc-bg); --p-fg: var(--wc-fg); --p-accent: var(--wc-accent);
+    display: flex; flex-direction: column; gap: 28px; min-width: 0;
+    background: var(--p-bg); color: var(--p-fg);
+    padding: 28px; border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .panel.eu { --p-bg: var(--eu-bg); --p-fg: var(--eu-fg); --p-accent: var(--eu-accent); }
+  .panel:hover { transform: translateY(-3px); border-color: var(--p-accent); }
+  .panel:focus-visible { outline: 3px solid var(--p-accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .panel { transition: none; } .panel:hover { transform: none; } }
+
+  .tag { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--p-accent); }
+  .years {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(54px, 10vw, 96px); line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    display: flex; flex-wrap: wrap; gap: 0 .18em; align-items: baseline;
+  }
+  .years .dash { color: var(--p-accent); }
+  .name { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 28px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .desc { margin: 0; opacity: .85; max-width: 38ch; }
+
+  .ticks { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+  .ticks li {
+    font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .03em;
+    font-variant-numeric: tabular-nums;
+    padding: 2px 8px; border: 1px solid color-mix(in srgb, var(--p-fg) 35%, transparent); border-radius: 3px;
+  }
+  .ticks li.now { background: var(--p-accent); color: var(--p-bg); border-color: var(--p-accent); }
+
+  .go {
+    margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding-top: 18px; border-top: 1px solid color-mix(in srgb, var(--p-fg) 25%, transparent);
+    font-weight: 600;
+  }
+  .go .host { font-weight: 400; font-size: 13px; opacity: .75; overflow-wrap: anywhere; }
+  .go .arrow { color: var(--p-accent); font-size: 22px; line-height: 1; }
+
+  footer { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="kicker">Historia del fútbol de selecciones</span>
+    <h1>Mundiales y Eurocopas</h1>
+    <p class="lead">Resultados, plantillas y clasificaciones de cada torneo. Elige la competición.</p>
+  </header>
+
+  <main class="grid">
+    <a class="panel" href="https://euroworldcup.github.io/fifaworldcup9426/" target="_blank" rel="noopener">
+      <span class="tag">Copa Mundial de la FIFA</span>
+      <div class="years" aria-label="De 1994 a 2026"><span>1994</span><span class="dash">–</span><span>2026</span></div>
+      <div>
+        <h2 class="name">Mundiales</h2>
+        <p class="desc">De Estados Unidos '94 a la edición de 2026, con todas las ediciones en una sola web.</p>
+      </div>
+      <ul class="ticks" aria-label="Ediciones">
+        <li>1994</li><li>1998</li><li>2002</li><li>2006</li><li>2010</li><li>2014</li><li>2018</li><li>2022</li><li class="now">2026</li>
+      </ul>
+      <div class="go">
+        <span>Entrar a la web <span class="host">euroworldcup.github.io/fifaworldcup9426</span></span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+
+    <a class="panel eu" href="https://euroworldcup.github.io/euro9624/" target="_blank" rel="noopener">
+      <span class="tag">Campeonato de Europa de la UEFA</span>
+      <div class="years" aria-label="De 1996 a 2024"><span>1996</span><span class="dash">–</span><span>2024</span></div>
+      <div>
+        <h2 class="name">Eurocopas</h2>
+        <p class="desc">De Inglaterra '96 a Alemania 2024, con las ocho ediciones del formato moderno.</p>
+      </div>
+      <ul class="ticks" aria-label="Ediciones">
+        <li>1996</li><li>2000</li><li>2004</li><li>2008</li><li>2012</li><li>2016</li><li>2020</li><li class="now">2024</li>
+      </ul>
+      <div class="go">
+        <span>Entrar a la web <span class="host">euroworldcup.github.io/euro9624</span></span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+  </main>
+
+  <footer>Las webs se abren en una pestaña nueva.</footer>
+</div>
+</body>
+</html>
